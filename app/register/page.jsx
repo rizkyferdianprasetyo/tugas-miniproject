@@ -1,4 +1,5 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 import Link from 'next/link';
 import { auth } from '../../firebase/firebase';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
@@ -10,7 +11,8 @@ export default function Register() {
   const signupHandler = async () => {
     if (!email || !password) return;
     try {
-      await createUserWithEmailAndPassword(auth, email, password)
+      const user = await createUserWithEmailAndPassword(auth, email, password)
+      console.log(user);
     } catch (error) {
       console.log("An error occured", error);
     }

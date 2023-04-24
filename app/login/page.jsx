@@ -1,11 +1,25 @@
+'use client'
 import React from 'react'
 import Link from 'next/link';
 import react, { useState } from 'react';
+import { auth } from '../../firebase/firebase';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
+
 
 export default function Login() {
-
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const router = useRouter()
+  const loginHandler = async () => {
+    if (!email || !password) return;
+    try {
+      const user = await signInWithEmailAndPassword(auth, email, password)
+      router.push("/dashboard")
+    } catch (error) {
+      console.log("An error ocured", error);
+    }
+  }
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -62,7 +76,7 @@ export default function Login() {
             <div>
               <button
                 type="submit"
-                onClick={signinHandle}
+                onClick={loginHandler}
                 className="flex w-full justify-center rounded-md bg-black px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Sign in
