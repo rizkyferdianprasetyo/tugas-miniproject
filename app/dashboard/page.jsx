@@ -1,6 +1,19 @@
-import React from 'react'
+"use client"
+import React, { useEffect } from 'react'
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/firebase/auth';
 
 export default function page() {
+
+    const { authUser, isLoading, signOut } = useAuth()
+
+    const router = useRouter()
+    useEffect(() => {
+        if (!isLoading && !authUser) {
+            router.push("/login")
+        }
+    }, [authUser, isLoading])
+
     return (
         <>
             <div className="flex flex-col h-screen w-64 bg-white text-black border-r">
@@ -34,7 +47,7 @@ export default function page() {
                         </svg>
                         <span>Orders</span>
                     </a>
-                    <a className="flex items-center text-gray-600  px-4 py-2 hover:bg-gray-200" href="#">
+                    <a className="flex items-center text-gray-600  px-4 py-2 hover:bg-gray-200" href="#" onClick={signOut}>
                         <svg
                             className="h-6 w-6 fill-current mr-2"
                             viewBox="0 0 20 20"
@@ -42,7 +55,7 @@ export default function page() {
                         >
                             <path d="M3 3h3v2H3V3zm5 0h2v2H8V3zm4 0h2v2h-2V3zm4 0h3v2h-3V3zM3 6h14v2H3V6zm0 4h6v2H3v-2zm8 0h6v2h-6v-2zm-8 4h14v2H3v-2z" />
                         </svg>
-                        <span>Products</span>
+                        <span>Logout</span>
                     </a>
                 </nav>
                 <div className="flex items-center justify-center h-16">

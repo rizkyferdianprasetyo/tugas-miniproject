@@ -1,21 +1,29 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link';
 import react, { useState } from 'react';
 import { auth } from '../../firebase/firebase';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/firebase/auth';
 
 
 export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const { authUser, isLoading } = useAuth()
+
   const router = useRouter()
+  useEffect(() => {
+    if (!isLoading && authUser) {
+      router.push("/dashboard")
+    }
+  }, [authUser, isLoading])
+
   const loginHandler = async () => {
     if (!email || !password) return;
     try {
       const user = await signInWithEmailAndPassword(auth, email, password)
-      router.push("/dashboard")
     } catch (error) {
       console.log("An error ocured", error);
     }

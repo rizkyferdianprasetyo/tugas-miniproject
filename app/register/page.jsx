@@ -1,17 +1,28 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link';
 import { auth } from '../../firebase/firebase';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/firebase/auth';
 
 export default function Register() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const { authUser, isLoading, setAuthUser } = useAuth()
+
+  const router = useRouter()
+  useEffect(() => {
+    if (!isLoading && authUser) {
+      router.push("/dashboard")
+    }
+  }, [authUser, isLoading])
 
   const signupHandler = async () => {
     if (!email || !password) return;
     try {
       const user = await createUserWithEmailAndPassword(auth, email, password)
+      setAuthUser({ uid: user.uid, email: user.email })
       console.log(user);
     } catch (error) {
       console.log("An error occured", error);
